@@ -1,12 +1,13 @@
 print("Starting mastodon watcher")
 from mastodon import Mastodon
 import os
+import traceback
 
 import time
 from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 
-
+import os
 
 mastodon = Mastodon(
     client_id = os.environ["M_CLIENT_ID"],
@@ -25,12 +26,15 @@ patterns = ["*.png"]
 my_event_handler = FileSystemEventHandler()
 
 def on_created(event):
-    # create post
-    print(f"new Image: {event.src_path}")
-    time.sleep(2)
-    media = mastodon.media_post(event.src_path, "image/png")
-    mastodon.status_post('SSTV Image received:', media_ids=[media["id"]])
-   
+    try:
+        # create post
+        print(f"new Image: {event.src_path}")
+        time.sleep(2)
+        media = mastodon.media_post(event.src_path, "image/png")
+        mastodon.status_post('SSTV Image received:', media_ids=[media["id"]])
+        os.remove(event.src_path)
+    except:
+        print(traceback.format_exc())
 
 my_event_handler.on_created = on_created
 
