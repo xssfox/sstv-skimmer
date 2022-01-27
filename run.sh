@@ -9,6 +9,7 @@ set -x
 trap "exit" SIGINT SIGTERM
 
 # pulse audio loopback hacks.
+rm -rvf /run/dbus/pid || true
 mkdir -p /var/run/dbus
 dbus-uuidgen > /var/lib/dbus/machine-id
 dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address
