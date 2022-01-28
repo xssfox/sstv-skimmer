@@ -1,5 +1,7 @@
 Skims SSTV off spyservers using QSSTV and uploads to mastodon. This is a WIP and shouldn't be considered as stable.
 
+> You may also need `--security-opt seccomp=unconfined` due to security restrictions on high resolution timers.
+
 ```sh
 docker run \
 -e HOST= \
