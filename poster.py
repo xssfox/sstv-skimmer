@@ -35,7 +35,8 @@ def on_created(event):
         date = event.src_path.split("/")[-1].split("_")[1]
         date = f"{date[:4]}-{date[4:6]}-{date[6:]}"
         time_var = f"{time_var[:2]}:{time_var[2:4]}:{time_var[4:6]}"
-        mastodon.status_post(f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}", media_ids=[media["id"]])
+        if sstv_mode != "BW12":
+            mastodon.status_post(f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}", media_ids=[media["id"]])
         os.remove(event.src_path)
     except:
         print(traceback.format_exc())
