@@ -6,8 +6,6 @@ on:
       - 'main'
   pull_request:
   workflow_dispatch:
-  schedule:
-    - cron: '45 10 * * 2'
 
 jobs:
   main:
