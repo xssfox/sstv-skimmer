@@ -1,6 +1,7 @@
 FROM ubuntu:21.04
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG QSSTV_CONFIG=qsstv_9.0.conf
 RUN apt-get update && apt-get install -y libfftw3-dev libfftw3-3 ffmpeg \
 xvfb qsstv pulseaudio build-essential git libsamplerate0-dev alsa-utils \
 xvfb python3 python3-pip cmake portaudio19-dev python-dev \
@@ -11,13 +12,13 @@ RUN git clone https://github.com/miweber67/spyserver_client.git && cd spyserver_
 #csdr
 RUN cd / && git clone https://github.com/jketterl/csdr.git && mkdir -p csdr/build && cd csdr/build && cmake .. && make && make install && ldconfig
 # python dependencies
-RUN pip3 install Mastodon.py watchdog soundmeter
+RUN pip3 install Mastodon.py watchdog soundmeter opencv-python
 #pulse server requiremeent
 RUN adduser root pulse-access
 
 # qsstv config
 RUN mkdir -p /root/.config/ON4QZ/
-COPY qsstv_9.0.conf /root/.config/ON4QZ/qsstv_9.0.conf
+COPY ${QSSTV_CONFIG} /root/.config/ON4QZ/qsstv_9.0.conf
 
 # poster script
 COPY poster.py /poster.py

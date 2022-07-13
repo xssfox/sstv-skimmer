@@ -54,6 +54,18 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and Push DRM Images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          cache-from: type=local,src=/tmp/buildx-cache
+          cache-to: type=local,dest=/tmp/buildx-cache-new,mode=max
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: drm
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            QSSTV_CONFIG=qsstv_9.0_drm.conf
 
       - name: Move Cache
         run: |

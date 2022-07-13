@@ -2,6 +2,7 @@ print("Starting mastodon watcher")
 from mastodon import Mastodon
 import os
 import traceback
+import cv2
 
 import time
 from watchdog.observers.polling import PollingObserver
@@ -30,13 +31,25 @@ def on_created(event):
         # create post
         print(f"new Image: {event.src_path}")
         time.sleep(2)
-        media = mastodon.media_post(event.src_path, "image/png")
-        sstv_mode, date, time_var = event.src_path.split("/")[-1].split("_")
-        date = event.src_path.split("/")[-1].split("_")[1]
-        date = f"{date[:4]}-{date[4:6]}-{date[6:]}"
-        time_var = f"{time_var[:2]}:{time_var[2:4]}:{time_var[4:6]}"
+        if event.src_path.endswith(".jp2"):
+            # treat as DRM
+            image = cv2.imread(event.src_path)
+            cv2.imwrite('/tmp/drm.png', image)
+            path = '/tmp/drm.png'
+            sstv_mode = "DRM"
+            message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
+        else:
+            path = event.src_path
+            sstv_mode, date, time_var = event.src_path.split("/")[-1].split("_")
+            date = event.src_path.split("/")[-1].split("_")[1]
+            date = f"{date[:4]}-{date[4:6]}-{date[6:]}"
+            time_var = f"{time_var[:2]}:{time_var[2:4]}:{time_var[4:6]}"
+            message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
+        
+        media = mastodon.media_post(path, "image/png")
+        
         if sstv_mode != "BW12":
-            mastodon.status_post(f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}", media_ids=[media["id"]], visibility="unlisted")
+            mastodon.status_post(message, media_ids=[media["id"]], visibility="unlisted")
         os.remove(event.src_path)
     except:
         print(traceback.format_exc())
