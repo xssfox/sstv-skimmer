@@ -38,6 +38,10 @@ def on_created(event):
             path = '/tmp/drm.png'
             sstv_mode = "DRM"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
+        if event.src_path.startswith("/drm/"):
+            path = event.src_path
+            sstv_mode = "DRM"
+            message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
         else:
             path = event.src_path
             sstv_mode, date, time_var = event.src_path.split("/")[-1].split("_")
@@ -57,6 +61,7 @@ def on_created(event):
 my_event_handler.on_created = on_created
 
 my_observer = PollingObserver()
+my_observer.schedule(my_event_handler, "/drm/")
 my_observer.schedule(my_event_handler, "/images/")
 my_observer.start()
 my_observer.join()

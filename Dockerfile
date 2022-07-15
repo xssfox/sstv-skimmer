@@ -33,3 +33,4 @@ RUN chmod a+x /run.sh
 
 ENTRYPOINT ["/bin/sh", "-c", "/run.sh"]
 VOLUME /images
+VOLUME /drm
