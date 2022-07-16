@@ -38,7 +38,7 @@ def on_created(event):
             path = '/tmp/drm.png'
             sstv_mode = "DRM"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
-        if event.src_path.startswith("/drm/"):
+        elif event.src_path.startswith("/drm/"):
             path = event.src_path
             sstv_mode = "DRM"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}"
