@@ -3,7 +3,7 @@ FROM ubuntu:21.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG QSSTV_CONFIG=qsstv_9.0.conf
 
-RUN sed -i -re 's/ports.ubuntu.com\/ubuntu-ports|security.ubuntu.com\/ubuntu-ports/old-releases.ubuntu.com\/ubuntu/g' /etc/apt/sources.list
+RUN sed -i -re 's/ports.ubuntu.com\/ubuntu-ports|security.ubuntu.com\/ubuntu-ports|archive.ubuntu.com\/ubuntu|security.ubuntu.com\/ubuntu/old-releases.ubuntu.com\/ubuntu/g' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y libfftw3-dev libfftw3-3 ffmpeg \
 xvfb qsstv pulseaudio build-essential git libsamplerate0-dev alsa-utils \
