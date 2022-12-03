@@ -99,7 +99,8 @@ def on_created(event):
         except:
             pass
         print(message)
-        mastodon.status_post(message, media_ids=media_ids, visibility="unlisted")
+        if sstv_mode != "BW12":
+            mastodon.status_post(message, media_ids=media_ids, visibility="unlisted")
         os.remove(event.src_path)
     except:
         print(traceback.format_exc())
