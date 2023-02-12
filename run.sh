@@ -50,9 +50,9 @@ then
 elif [ "$MODE" == "FM" ]
 then
     echo "Using NBFM via SpyServer"
-    ss_iq -a 1200 -r $HOST -q $PORT -f $FREQ -s 24000 -b 16 - | \
+    ss_iq -a 12000 -r $HOST -q $PORT -f $FREQ -s 24000 -b 16 - | \
     csdr convert_s16_f |\
-    csdr fmdemod_quadri_cf | csdr limit_ff | csdr deemphasis_nfm_ff 24000 | csdr fastagc_ff | csdr convert_f_s16 |\
+    csdr fmdemod_quadri_cf | csdr limit_ff | csdr fastagc_ff | csdr convert_f_s16 |\
     aplay -r 24000 -f s16 -t raw -c 1 - &
 else
     echo "UNKNOWN MODE"
