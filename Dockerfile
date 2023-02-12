@@ -8,7 +8,7 @@ RUN sed -i -re 's/ports.ubuntu.com\/ubuntu-ports|security.ubuntu.com\/ubuntu-por
 RUN apt-get update && apt-get install -y libfftw3-dev libfftw3-3 ffmpeg \
 xvfb qsstv pulseaudio build-essential git libsamplerate0-dev alsa-utils \
 xvfb python3 python3-pip cmake portaudio19-dev python-dev python3-opencv \
-alsa-utils && rm -rf /var/lib/apt/lists/*
+alsa-utils rtl-sdr && rm -rf /var/lib/apt/lists/*
 
 # spy server
 RUN git clone https://github.com/miweber67/spyserver_client.git && cd spyserver_client && make && cp ss_client /usr/bin/ss_iq
