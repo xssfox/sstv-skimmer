@@ -13,7 +13,7 @@ alsa-utils rtl-sdr && rm -rf /var/lib/apt/lists/*
 # spy server
 RUN git clone https://github.com/miweber67/spyserver_client.git && cd spyserver_client && make && cp ss_client /usr/bin/ss_iq
 #csdr
-RUN cd / && git clone https://github.com/jketterl/csdr.git && mkdir -p csdr/build && cd csdr/build && cmake .. && make && make install && ldconfig
+RUN cd / && git clone https://github.com/jketterl/csdr.git && cd csdr && git checkout master && mkdir -p build && cd build && cmake .. && make && make install && ldconfig
 # python dependencies
 RUN pip3 install Mastodon.py watchdog soundmeter requests
 #pulse server requiremeent
