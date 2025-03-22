@@ -59,7 +59,7 @@ def on_created(event):
             time_var = f"{time_var[:2]}:{time_var[2:4]}:{time_var[4:6]}"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}kHz\n"
         
-        mime = mimetypes.guess_file_type(filename)[0]
+        mime = mimetypes.guess_type(filename)[0]
         if not mime:
             mime = "image/png"
         media = mastodon.media_post(path, mime, description="Image received by slow scan television", filename=filename)
