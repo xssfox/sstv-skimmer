@@ -3,6 +3,7 @@ from mastodon import Mastodon
 import os
 import traceback
 import cv2
+import mimetypes
 
 import requests
 import json
@@ -37,12 +38,14 @@ def on_created(event):
         print(f"new Image: {event.src_path}")
 
         time.sleep(2)
+        filename = event.src_path.split("/")[-1]
         if event.src_path.endswith(".jp2"):
             # treat as DRM
             image = cv2.imread(event.src_path)
             cv2.imwrite('/tmp/drm.png', image)
             path = '/tmp/drm.png'
             sstv_mode = "DRM"
+            filename = "drm.png"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']}. Filename: {event.src_path.split('/')[-1]}\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}kHz\n"
         elif event.src_path.startswith("/drm/"):
             path = event.src_path
@@ -56,7 +59,10 @@ def on_created(event):
             time_var = f"{time_var[:2]}:{time_var[2:4]}:{time_var[4:6]}"
             message = f"SSTV {sstv_mode} Image received on {int(os.environ['FREQ'])/1000000:.3f} MHz {os.environ['MODE']} at {date} {time_var} UTC\n#sstv #{sstv_mode} #{int(os.environ['FREQ'])/1000:.0f}kHz\n"
         
-        media = mastodon.media_post(path, "image/png", description="Image received by slow scan television")
+        mime = mimetypes.guess_file_type(filename)[0]
+        if not mime:
+            mime = "image/png"
+        media = mastodon.media_post(path, mime, description="Image received by slow scan television", filename=filename)
         
         media_ids = [media["id"]]
 
