@@ -62,7 +62,7 @@ def on_created(event):
         mime = mimetypes.guess_type(filename)[0]
         if not mime:
             mime = "image/png"
-        media = mastodon.media_post(path, mime, description="Image received by slow scan television", filename=filename)
+        media = mastodon.media_post(path, mime, description="Image received by slow scan television")
         
         media_ids = [media["id"]]
 
